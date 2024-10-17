@@ -27,6 +27,7 @@ async function run() {
 
     const menuCollection = client.db("klocalDB").collection("menu");
     const reviewCollection = client.db("klocalDB").collection("reviews");
+    const cartCollection = client.db("klocalDB").collection("carts");
 
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
@@ -35,6 +36,21 @@ async function run() {
 
     app.get("/reviews", async (req, res) => {
       const result = await reviewCollection.find().toArray();
+      res.send(result);
+    });
+
+    //cart collection
+
+    app.get("/carts", async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const result = await cartCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.post("/carts", async (req, res) => {
+      const cartItem = req.body;
+      const result = await cartCollection.insertOne(cartItem);
       res.send(result);
     });
 
@@ -57,3 +73,16 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`KLocal is running on port ${port}`);
 });
+
+/**
+ * ------------------------------
+ *      NAMING CONVENTION
+ * ------------------------------
+ * app.get('/users')
+ * app.get('/users/:id')
+ * app.post('/users')
+ * app.put('/users/:id')
+ * app.patch('/users/:id')
+ * app.delete('/users/:id')
+ *
+ * **/
