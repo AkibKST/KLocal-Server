@@ -26,8 +26,16 @@ async function run() {
     await client.connect();
 
     const menuCollection = client.db("klocalDB").collection("menu");
+    const userCollection = client.db("klocalDB").collection("users");
     const reviewCollection = client.db("klocalDB").collection("reviews");
     const cartCollection = client.db("klocalDB").collection("carts");
+
+    // users related api
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
 
     app.get("/menu", async (req, res) => {
       const result = await menuCollection.find().toArray();
